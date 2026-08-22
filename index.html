@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a Tickera Fénix</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="logo_cecosesola.png">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <main class="welcome-card">
+            <header class="card-header">
+                <h1>Bienvenido a Tickera Fénix</h1>
+                <p>Seleccione la Feria para la que va a imprimir tickets.</p>
+            </header>
+
+            <div class="feria-grid">
+                <button class="feria-btn center" id="btn-centro" onclick="selectFeria('Centro')">
+                    <span>Feria del Centro</span>
+                </button>
+                <button class="feria-btn east" id="btn-este" onclick="selectFeria('Este')">
+                    <span>Feria del Este</span>
+                </button>
+                <button class="feria-btn ruiz" id="btn-ruiz" onclick="selectFeria('Ruiz Pineda')">
+                    <span>Feria de Ruiz Pineda</span>
+                </button>
+            </div>
+        </main>
+    </div>
+    <script src="src/interfaz.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,246 @@
+/* Definiciones de estilo específicas para impresión */
+@media print {
+
+    /* ESTABLECER MÁRGENES DE PÁGINA A LA CONFIGURACIÓN PREDETERMINADA DEL USUARIO (0mm, 6.5mm, 27mm, 0mm) */
+    @page {
+        /* CLAVE CORREGIDA: Intercambiamos a 210mm (ancho) x 80mm (alto) para forzar Paisaje */
+        size: 210mm 80mm;
+        /* NUEVA CONFIGURACIÓN DE MARGEN PREDETERMINADA: top right bottom left */
+        margin: 2mm 6mm 54.5mm 0mm !important;
+        /* CLAVE: FORZAR ORIENTACIÓN HORIZONTAL (Landscape) */
+    }
+
+    /* Ajuste del BODY para mínima separación (simulando 0mm) */
+    body {
+        /* Padding mínimo, el margen principal se gestiona en @page */
+        padding: 0 !important;
+    }
+
+    /* Ocultar la interfaz de control (botones, input de archivo, buscador) al imprimir */
+    .print-controls,
+    .print-column-button,
+    .print-single-button,
+    .project-footer,
+    .delete-manual-button,
+    .delete-excel-button,
+    #helpButton {
+        display: none !important;
+    }
+
+    /* Asegurar que el área de la etiqueta se muestre bien */
+    .printable-area {
+        margin: 0;
+        padding: 0;
+        display: block !important;
+    }
+
+    /* Forzar el ancho de página completa para el contenedor de la columna al imprimir */
+    .print-column-container {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+    }
+
+    /* Estilo para cada "etiqueta" individual al imprimir */
+    .price-card {
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        /* AUMENTADO: Mantener consistencia con el tamaño de pantalla de 11rem */
+        height: 11rem !important;
+        width: 100%;
+        margin-bottom: 0.5rem;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        /* Globalmente negro */
+        /* REGLA DE CORTE: Forzar un salto de página después de cada tarjeta (Intenta forzar el corte) */
+        page-break-after: always !important;
+    }
+
+    /* APLICACIÓN DE ESTILOS MÁS GRUESOS AL IMPRIMIR EN LA REGLA GENERAL */
+
+    /* Producto: Negro y Máximo Grosor, alineación centrada */
+    .price-card h3 {
+        color: #000000 !important;
+        font-size: 1.8rem !important;
+        font-weight: 1000 !important;
+        /* MÁXIMO GROSOR DEL INTER FONT */
+        text-align: center !important;
+        /* Asegurar centrado */
+    }
+
+    /* Contenedor del Precio: Asegura que todo el texto dentro sea negro */
+    .price-card>div:last-child {
+        color: #000000 !important;
+        /* Asegura el negro */
+        font-weight: 1000 !important;
+        /* Fuerza el grosor en el contenedor principal del precio */
+        /* NUEVO: Justificación para el precio */
+        justify-content: flex-start !important;
+        /* Alinear el grupo Bs + Precio a la izquierda */
+        padding-left: 0.5rem !important;
+        /* Un poco de margen a la izquierda del Bs */
+    }
+
+    /* Símbolo de la moneda (Bs): Negro y Grosor Extra */
+    .price-card .currency-symbol {
+        color: #000000 !important;
+        font-weight: 1000 !important;
+        /* MÁXIMO GROSOR DEL INTER FONT */
+        /* NUEVO: Reduce tamaño y establece un ancho fijo */
+        font-size: 2rem !important;
+        /* Tamaño más pequeño que el valor */
+        width: 2.5rem;
+        /* Ancho fijo para alineación vertical */
+        text-align: right;
+        padding-top: 2rem !important;
+        /* Mover Bs hacia arriba */
+    }
+
+    /* Valor del Precio (el número): Negro y Grosor Extra */
+    .price-card .price-value {
+        color: #000000 !important;
+        /* Aumentado a 5rem para que sea GRANDE */
+        font-size: 5rem !important;
+        font-weight: 1000 !important;
+        /* MÁXIMO GROSOR DEL INTER FONT */
+        line-height: 1 !important;
+        /* Interlineado compacto */
+    }
+
+
+    /* Fecha y Handle Social: Negro y Máximo Grosor */
+    .price-card .ticket-date,
+    .price-card .social-handle {
+        color: #000000 !important;
+        font-weight: 1000 !important;
+        /* MÁXIMO GROSOR DEL INTER FONT */
+    }
+}
+
+/* Estilos base para la vista en pantalla */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Estilos para el modo nocturno */
+body.dark-mode {
+    background-color: #1e293b;
+    /* Slate-800 */
+    color: #f1f5f9;
+    /* Slate-100 */
+}
+
+body.dark-mode #app {
+    background-color: #334155;
+    /* Slate-700 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode header h1 {
+    color: #93c5fd;
+    /* Blue-300 */
+}
+
+body.dark-mode header p {
+    color: #cbd5e1;
+    /* Slate-300 */
+}
+
+body.dark-mode .bg-gray-50 {
+    background-color: #475569;
+    /* Slate-600 */
+    border-color: #64748b;
+    /* Slate-500 */
+}
+
+body.dark-mode .text-gray-700 {
+    color: #cbd5e1;
+}
+
+body.dark-mode input,
+body.dark-mode .file-input-container {
+    border-color: #64748b;
+    background-color: #334155;
+    color: #f1f5f9;
+}
+
+body.dark-mode .price-card {
+    background-color: #475569;
+    /* Slate-600 */
+    border-color: #94a3b8 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .price-card h3 {
+    color: #f1f5f9;
+}
+
+/* Aseguramos que el precio se vea bien en Dark Mode (un azul más claro) */
+body.dark-mode .price-card .text-blue-600 {
+    color: #93c5fd;
+    /* Blue-300 */
+}
+
+body.dark-mode .price-card .text-gray-500 {
+    color: #94a3b8;
+}
+
+/* Estilo para el botón de impresión individual */
+.print-single-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    z-index: 10;
+}
+
+/* Estilo para el botón de eliminación manual */
+.delete-manual-button {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    z-index: 10;
+}
+
+/* NUEVO: Estilo para el botón de eliminación de Excel */
+.delete-excel-button {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    z-index: 10;
+}
+
+/* Definición base para la tarjeta de precio, incluyendo el borde punteado */
+.price-card {
+    border: 1px dashed #ccc !important;
+    /* Borde suave para indicar la separación */
+}
+
+/* Estilo para ocultar/mostrar tarjetas en la búsqueda */
+.price-card.hidden-by-filter {
+    display: none !important;
+}
+
+/* Estilos para el modal */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    transform: translateY(-50px);
+    transition: transform 0.3s ease-in-out;
+}
+
+.modal.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal.open .modal-content {
+    transform: translateY(0);
+}

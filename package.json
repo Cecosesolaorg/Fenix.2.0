@@ -1,0 +1,18 @@
+{
+  "name": "fenix-ticker",
+  "version": "2.0.0",
+  "description": "Aplicación de Impresión de Tickets Fénix",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-packager . FenixTicker --platform=win32 --arch=x64 --icon=./logo_cecosesola.ico --overwrite"
+  },
+  "author": "Antigravity",
+  "dependencies": {
+    "electron": "^25.0.0"
+  },
+  "devDependencies": {
+    "electron-packager": "^17.1.1",
+    "png-to-ico": "^3.0.1"
+  }
+}

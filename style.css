@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+:root {
+    --bg-color: #f8fafc;
+    --card-bg: rgba(255, 255, 255, 0.98);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --border-color: rgba(0, 0, 0, 0.05);
+
+    --color-centro: #6366f1;
+    --color-este: #10b981;
+    --color-ruiz: #f59e0b;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.02), transparent 40%);
+    z-index: -1;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+}
+
+.welcome-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: var(--shadow-xl);
+    text-align: center;
+    border: 1px solid var(--border-color);
+    transform: translateY(0);
+    animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-header {
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 24px;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 16px;
+}
+
+p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.feria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.feria-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 32px 24px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+    min-height: 180px;
+    background-size: cover;
+    background-position: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.feria-btn span {
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    z-index: 1;
+}
+
+.feria-btn:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+.feria-btn:active {
+    transform: translateY(-2px);
+}
+
+.feria-btn.center {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.8)), url('FERIA DEL CENTRO.png');
+}
+
+.feria-btn.east {
+    background-image: linear-gradient(rgba(5, 150, 105, 0.6), rgba(5, 150, 105, 0.8)), url('FERIA DEL ESTE.png');
+}
+
+.feria-btn.ruiz {
+    background-image: linear-gradient(rgba(217, 119, 6, 0.6), rgba(217, 119, 6, 0.8)), url('RUIZ PINEDA.png');
+}
+
+.feria-btn:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+.feria-btn.center:hover {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.6)), url('FERIA DEL CENTRO.png');
+}
+
+.feria-btn.east:hover {
+    background-image: linear-gradient(rgba(5, 150, 105, 0.4), rgba(5, 150, 105, 0.6)), url('FERIA DEL ESTE.png');
+}
+
+.feria-btn.ruiz:hover {
+    background-image: linear-gradient(rgba(217, 119, 6, 0.4), rgba(217, 119, 6, 0.6)), url('RUIZ PINEDA.png');
+}
+
+.feria-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.feria-btn:hover::after {
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .welcome-card {
+        padding: 32px 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .feria-grid {
+        grid-template-columns: 1fr;
+    }
+}

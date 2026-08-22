@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fénix Ticker | cecosesola</title>
+    <link rel="icon" type="image/png" href="logo_cecosesola.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Lucide Icons for premium feel -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- XLSX library for Excel processing -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.4/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="title-container">
+                <img src="logo_cecosesola.png" alt="Logo" class="logo">
+                <h1 id="main-title">Fénix Ticker</h1>
+                <img src="logo_cecosesola.png" alt="Logo" class="logo">
+            </div>
+            <p class="subtitle" id="current-date"></p>
+        </header>
+
+        <main>
+            <section class="controls-card">
+                <div class="upload-area" id="drop-zone">
+                    <i data-lucide="upload-cloud"
+                        style="width: 48px; height: 48px; color: var(--primary); margin-bottom: 1rem;"></i>
+                    <p style="font-weight: 700; margin-bottom: 0.5rem;">Arrastra tu archivo Excel aquí</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted-light);">O haz clic para seleccionar (xlsx,
+                        xls)</p>
+                    <input type="file" id="excel-file" accept=".xlsx, .xls" style="display: none;">
+                </div>
+
+                <div class="button-group">
+                    <div class="search-container">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="search-box" class="search-input" placeholder="Buscar producto..."
+                            disabled>
+                    </div>
+
+
+
+                    <button class="btn" style="background-color: #f472b6; color: white;" id="presets-btn"
+                        onclick="initPresets('fruit'); document.getElementById('presets-modal').style.display='flex'">
+                        <i data-lucide="apple"></i>
+                        Frutería
+                    </button>
+
+                    <button class="btn" style="background-color: #8b5cf6; color: white;" id="mascota-btn"
+                        onclick="initPresets('pet'); document.getElementById('presets-modal').style.display='flex'">
+                        <i data-lucide="dog"></i>
+                        Mascota
+                    </button>
+
+                    <button class="btn" style="background-color: #3b82f6; color: white;" id="charcuteria-btn"
+                        onclick="window.location.href='charcuteria.html'">
+                        <i data-lucide="beef"></i>
+                        Charcutería
+                    </button>
+
+                    <button class="btn btn-primary" id="manual-btn">
+                        <i data-lucide="plus-circle"></i>
+                        Nuevo Ticket
+                    </button>
+
+                    <button class="btn btn-success" id="print-btn" disabled>
+                        <i data-lucide="printer"></i>
+                        Imprimir Seleccionados
+                    </button>
+
+                    <button class="btn" style="padding: 0 0.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #e2e8f0; color: #475569; min-width: 50px; margin-right: 0.5rem;" onclick="toggleAllDollar()" title="Agregar/Quitar dólar a todos">
+                            <i data-lucide="check-square" style="width: 18px; margin-bottom: 2px;"></i>
+                            <span style="font-size: 0.55rem; font-weight: 800;">TODOS $</span>
+                        </button>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 3px;">
+                        <span style="font-size: 0.62rem; font-weight: 900; color: #ef4444; letter-spacing: 2px;">DOLAR</span>
+                        <div style="display: flex; align-items: center; border: 2px solid #ef4444; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 5px rgba(239,68,68,0.25);">
+                            <span
+                                style="background: #ef4444; color: white; font-weight: 900; padding: 0.38rem 0.45rem; font-size: 1rem; line-height: 1;">$</span>
+                            <input type="number" id="manual-dolar" step="0.01" min="0" placeholder="0.00"
+                                style="border: none; padding: 0.3rem 0.4rem; width: 65px; font-weight: 700; font-size: 0.95rem; text-align: center; outline: none; color: #1e293b; background: white;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group" style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">
+                    <p
+                        style="width: 100%; text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--text-muted-light); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">
+                        Selección por Columna</p>
+                    <button class="btn btn-primary" style="background-color: #6366f1; flex: 1;"
+                        onclick="selectColumn(1)">
+                        <i data-lucide="columns"></i>
+                        Columna 1
+                    </button>
+                    <button class="btn btn-primary" style="background-color: #4f46e5; flex: 1;"
+                        onclick="selectColumn(2)">
+                        <i data-lucide="columns"></i>
+                        Columna 2
+                    </button>
+                    <button class="btn btn-primary" style="background-color: #4338ca; flex: 1;"
+                        onclick="selectColumn(3)">
+                        <i data-lucide="columns"></i>
+                        Columna 3
+                    </button>
+                </div>
+            </section>
+
+            <div id="status-message" style="text-align: center; margin-bottom: 1rem; font-weight: 600;"></div>
+
+            <div class="price-grid" id="price-grid">
+                <!-- Data will be injected here -->
+            </div>
+
+            <div id="empty-state" style="text-align: center; padding: 4rem; color: var(--text-muted-light);">
+                <i data-lucide="file-text" style="width: 64px; height: 64px; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>Sube un archivo Excel o crea un ticket manual para comenzar</p>
+            </div>
+        </main>
+
+        <footer style="margin-top: 4rem; text-align: center; color: var(--text-muted-light); padding-bottom: 2rem;">
+            <p style="font-weight: 700;">Fénix Ticker v2</p>
+            <p style="font-size: 0.8rem; font-style: italic;">Simboliza el resurgimiento y la creación a partir de la
+                dificultad.
+
+            </p>
+        </footer>
+    </div>
+
+    <!-- Modal Feria Selection (Backup if data lost) -->
+    <div class="modal-overlay" id="feria-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 style="text-align: center; margin-bottom: 1.5rem; font-weight: 900; font-size: 1.5rem;">Selecciona tu
+                Sede</h2>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
+                <button class="btn btn-primary" style="padding: 1.5rem; justify-content: center; font-size: 1.2rem;"
+                    onclick="setFeria('centro')">Feria del Centro</button>
+                <button class="btn btn-success"
+                    style="padding: 1.5rem; justify-content: center; font-size: 1.2rem; background-color: #10b981;"
+                    onclick="setFeria('este')">Feria del Este</button>
+                <button class="btn btn-warning"
+                    style="padding: 1.5rem; justify-content: center; font-size: 1.2rem; background-color: #f59e0b;"
+                    onclick="setFeria('ruiz')">Feria de Ruiz Pineda</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Manual Ticket -->
+    <div class="modal-overlay" id="manual-modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 1.5rem; font-weight: 800;">Nuevo Ticket Manual</h2>
+            <div class="form-group">
+                <label class="form-label">Nombre del Producto</label>
+                <input type="text" id="manual-name" class="form-input" placeholder="Ej: CAMBUR">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Precio (Bs)</label>
+                <input type="number" id="manual-price" class="form-input" placeholder="0.00" step="0.01">
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                <button class="btn" style="background: #e2e8f0; color: #475569;" id="close-manual-btn">Cancelar</button>
+                <button class="btn btn-primary" id="save-manual-btn">Guardar y Seleccionar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Presets -->
+    <div class="modal-overlay" id="presets-modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="font-weight: 800;">Productos de Frutería</h2>
+                <button class="btn" id="close-presets-btn" style="padding: 0.5rem;"><i data-lucide="x"></i></button>
+            </div>
+            <div class="presets-grid" id="presets-grid">
+                <!-- Presets will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="src/datos_productos.js"></script>
+    <script src="src/estado.js"></script>
+    <script src="src/utilidades.js"></script>
+    <script src="src/interfaz.js"></script>
+    <script src="src/subir_excel.js"></script>
+    <script src="src/precio_dolar.js"></script>
+    <script src="src/gestion_tickets.js"></script>
+    <script src="src/principal.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
