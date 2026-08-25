@@ -55,19 +55,23 @@
                         Imprimir Seleccionados
                     </button>
 
-                    <button class="btn" style="padding: 0 0.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #e2e8f0; color: #475569; min-width: 50px; margin-right: 0.5rem;" onclick="toggleAllDollar()" title="Agregar/Quitar dólar a todos">
-                            <i data-lucide="check-square" style="width: 18px; margin-bottom: 2px;"></i>
-                            <span style="font-size: 0.55rem; font-weight: 800;">TODOS $</span>
+                    <!-- === DOLAR WIDGET === -->
+                    <div style="display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);border-radius:14px;padding:8px 14px;box-shadow:0 4px 18px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.08);">
+                        <button onclick="toggleAllDollar()" title="Agregar/Quitar dólar a todos"
+                            style="display:flex;flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:6px 10px;cursor:pointer;transition:all .2s;">
+                            <i data-lucide="check-square" style="width:17px;height:17px;color:#34d399;"></i>
+                            <span style="font-size:0.48rem;font-weight:900;color:#34d399;letter-spacing:2px;">TODOS</span>
                         </button>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 3px;">
-                        <span style="font-size: 0.62rem; font-weight: 900; color: #ef4444; letter-spacing: 2px;">DOLAR</span>
-                        <div style="display: flex; align-items: center; border: 2px solid #ef4444; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 5px rgba(239,68,68,0.25);">
-                            <span
-                                style="background: #ef4444; color: white; font-weight: 900; padding: 0.38rem 0.45rem; font-size: 1rem; line-height: 1;">$</span>
-                            <input type="number" id="manual-dolar" step="0.01" min="0" placeholder="0.00"
-                                style="border: none; padding: 0.3rem 0.4rem; width: 65px; font-weight: 700; font-size: 0.95rem; text-align: center; outline: none; color: #1e293b; background: white;">
+                        <div style="display:flex;flex-direction:column;gap:2px;">
+                            <span style="font-size:0.5rem;font-weight:800;color:#94a3b8;letter-spacing:3px;text-transform:uppercase;">Tasa Dólar</span>
+                            <div style="display:flex;align-items:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:9px;overflow:hidden;">
+                                <span style="background:linear-gradient(135deg,#16a34a,#15803d);color:white;font-weight:900;padding:5px 9px;font-size:1.05rem;line-height:1;letter-spacing:-.5px;">$</span>
+                                <input type="number" id="manual-dolar" step="0.01" min="0" placeholder="0.00"
+                                    style="border:none;padding:5px 8px;width:72px;font-weight:800;font-size:0.95rem;text-align:center;outline:none;color:#f1f5f9;background:transparent;">
+                            </div>
                         </div>
                     </div>
+                    <!-- === /DOLAR WIDGET === -->
                 </div>
 
                 <div class="button-group" style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">

@@ -77,7 +77,7 @@ const UI_CONFIG = {
         buttons: [
             { id: 'fruit', label: 'Frutería', icon: 'apple', color: '#f472b6', action: () => initPresets('fruit') },
             { id: 'pet', label: 'Mascota', icon: 'dog', color: '#8b5cf6', action: () => initPresets('pet') },
-            { id: 'char', label: 'Charcutería', icon: 'beef', color: '#3b82f6', action: () => initPresets('char') }
+            { id: 'char', label: 'Charcutería', icon: 'beef', color: '#3b82f6', action: () => initPresets('charcuteria') }
         ]
     },
     'ruiz': {

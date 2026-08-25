@@ -144,9 +144,9 @@ function renderGrid(filter = '') {
                 <div class="card-social">${currentFeria ? currentFeria.handle : ''}</div>
             </div>
             <h3 class="card-title">${card.name}</h3>
-            <div class="card-price">
+            <div class="card-price" title="Haz clic en el precio para editarlo">
                 <span class="currency">Bs</span>
-                <span class="price-value">${card.price}</span>
+                <span class="price-value" onclick="editPrice('${card.id}', this)" style="cursor: pointer; border-bottom: 2px dashed #94a3b8; padding-bottom: 1px;">${card.price}</span>
             </div>
             <div class="card-actions">
                 <button class="action-btn" onclick="printSingle('${card.id}')" title="Imprimir solo este"><i data-lucide="printer" style="width: 14px;"></i></button>
@@ -254,3 +254,37 @@ window.selectColumn = selectColumn;
 window.saveManualTicket = saveManualTicket;
 window.toggleDollar = toggleDollar;
 window.toggleAllDollar = toggleAllDollar;
+
+function editPrice(cardId, spanEl) {
+    // Don't create a second input if already editing
+    if (spanEl.querySelector('input')) return;
+
+    const card = allCards.find(c => c.id === cardId);
+    if (!card) return;
+
+    const currentVal = String(card.price).replace(/\./g, '').replace(',', '.');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '0';
+    input.step = '0.01';
+    input.value = currentVal !== '0.00' ? currentVal : '';
+    input.placeholder = '0.00';
+    input.style.cssText = 'width: 120px; font-size: 2.8rem; font-weight: 900; color: black; border: none; border-bottom: 2px solid var(--primary); outline: none; text-align: center; background: transparent;';
+
+    const save = () => {
+        const val = input.value.trim();
+        if (val && !isNaN(parseFloat(val)) && parseFloat(val) >= 0) {
+            card.price = formatPrice(val);
+        }
+        renderGrid(searchBox ? searchBox.value.trim().toLowerCase() : '');
+    };
+
+    input.onblur = save;
+    input.onkeydown = (e) => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.onblur = null; renderGrid(searchBox ? searchBox.value.trim().toLowerCase() : ''); } };
+
+    spanEl.innerHTML = '';
+    spanEl.appendChild(input);
+    setTimeout(() => input.focus(), 50);
+}
+
+window.editPrice = editPrice;

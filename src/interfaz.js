@@ -91,8 +91,13 @@ function initPresets(type = 'fruit') {
         btn.className = 'preset-btn';
         btn.textContent = product;
         btn.onclick = () => {
-            presetsModal.style.display = 'none';
-            openManualModal(product.toUpperCase());
+            if (type === 'charcuteria') {
+                if (typeof presetsModal !== 'undefined' && presetsModal) presetsModal.style.display = 'none';
+                if (typeof openManualModal === 'function') openManualModal(product.toUpperCase());
+            } else {
+                if (typeof presetsModal !== 'undefined' && presetsModal) presetsModal.style.display = 'none';
+                if (typeof openManualModal === 'function') openManualModal(product.toUpperCase());
+            }
         };
         presetsGrid.appendChild(btn);
     });
