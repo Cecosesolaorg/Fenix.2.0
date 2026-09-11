@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fenix-ticker-v1';
+const CACHE_NAME = 'fenix-ticker-v3';
 const ASSETS = [
     './',
     './index.html',

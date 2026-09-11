@@ -82,6 +82,9 @@ function initPresets(type = 'fruit') {
     } else if (type === 'charcuteria') {
         products = CHARCUTERIA_PRODUCTS;
         titleContent = 'Productos de Charcutería';
+    } else if (type === 'viveres') {
+        products = VIVERES_PRODUCTS;
+        titleContent = 'Productos de Víveres';
     }
 
     if (title) title.textContent = titleContent;
@@ -101,6 +104,27 @@ function initPresets(type = 'fruit') {
         };
         presetsGrid.appendChild(btn);
     });
+
+    const searchInput = document.getElementById('presets-search');
+    if (searchInput) {
+        searchInput.value = '';
+        setTimeout(() => searchInput.focus(), 100);
+
+        const newSearchInput = searchInput.cloneNode(true);
+        searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+
+        newSearchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const buttons = presetsGrid.querySelectorAll('.preset-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(term)) {
+                    btn.style.display = 'flex';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+        });
+    }
 }
 
 function populateCharcuteria() {
@@ -118,7 +142,15 @@ function renderControls() {
     const container = document.querySelector('.button-group');
     if (!container) return;
 
-    const feriaId = localStorage.getItem('selectedFeria') || 'centro';
+    // Detect feria from the current URL (same logic as initFeria)
+    const path = window.location.pathname;
+    let feriaId = 'centro';
+    if (path.includes('este.html')) feriaId = 'este';
+    else if (path.includes('ruiz.html')) feriaId = 'ruiz';
+    else {
+        // Fallback to localStorage (both possible keys)
+        feriaId = localStorage.getItem('feriaSelection') || localStorage.getItem('selectedFeria') || 'centro';
+    }
     const config = UI_CONFIG[feriaId] || UI_CONFIG['centro'];
 
     const oldPresets = container.querySelectorAll('.dynamic-btn');
@@ -134,7 +166,9 @@ function renderControls() {
         button.innerHTML = `<i data-lucide="${btn.icon}"></i> ${btn.label}`;
         button.onclick = () => {
             btn.action();
-            if (btn.id !== 'char' || feriaId === 'este') {
+            // Open presets modal unless the button handles its own modal (skipPresets)
+            // or it's a charcuteria button that navigates away (centro)
+            if (!btn.skipPresets && !(btn.id === 'char' && feriaId !== 'este')) {
                 presetsModal.style.display = 'flex';
             }
         };

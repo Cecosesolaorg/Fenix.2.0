@@ -208,7 +208,9 @@ function buildTicketHtml(card, today, feriaHandle) {
     h += '<span style="font-family:Montserrat,sans-serif;font-size:6rem;font-weight:900;color:black;line-height:0.9;"> ' + card.price + '</span>';
     h += '</div>';
     h += dollarCorner;
+    h += '<div style="font-family:Montserrat,sans-serif;font-size:0.85rem;font-weight:700;color:black;font-style:italic;text-align:center;margin-top:2mm;">¡Gracias por tu visita! Que tengas un excelente día.</div>'; h += '<div style="font-family:Montserrat,sans-serif;font-size:0.85rem;font-weight:700;color:black;font-style:italic;text-align:center;margin-top:2mm;">¡Gracias por tu visita! Que tengas un excelente día.</div>';
     h += '<div style="font-family:Montserrat,sans-serif;font-size:0.85rem;font-weight:700;color:black;font-style:italic;text-align:center;margin-top:2mm;">¡Gracias por tu visita! Que tengas un excelente día.</div>';
+
     h += '</div>';
     h += '</div>';
     return h;
@@ -288,3 +290,174 @@ function editPrice(cardId, spanEl) {
 }
 
 window.editPrice = editPrice;
+
+// ============================================================
+//  PRODUCTOS DE CAJA  (Feria del Este)
+// ============================================================
+
+let cajaItems = []; // { name, price }
+
+function openCajaModal() {
+    if (typeof CAJA_PRODUCTS === 'undefined') return;
+
+    // Always rebuild modal for fresh state
+    let modal = document.getElementById('caja-modal');
+    if (modal) modal.remove();
+
+    modal = document.createElement('div');
+    modal.id = 'caja-modal';
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal-content" style="max-width:780px;width:95%;padding:0;overflow:hidden;border-radius:18px;">
+        <!-- HEADER -->
+        <div style="background:linear-gradient(135deg,#dc2626,#991b1b);padding:1.2rem 1.5rem;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.6rem;">📦</span>
+              <h2 style="font-weight:900;color:white;font-size:1.3rem;margin:0;">Productos de Caja</h2>
+            </div>
+            <p style="font-size:0.78rem;color:rgba(255,255,255,0.75);margin:4px 0 0 38px;">Ingresa el precio de cada producto y presiona Imprimir</p>
+          </div>
+          <button id="close-caja-btn" style="background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:white;font-size:1.2rem;font-weight:900;">&times;</button>
+        </div>
+
+        <!-- PRODUCT LIST -->
+        <div id="caja-product-list" style="padding:1rem 1.2rem;display:flex;flex-direction:column;gap:0;max-height:62vh;overflow-y:auto;"></div>
+
+        <!-- FOOTER -->
+        <div style="padding:1rem 1.5rem;background:#f8fafc;border-top:2px solid #e2e8f0;display:flex;gap:1rem;justify-content:flex-end;align-items:center;">
+          <button id="caja-cancel-btn" style="background:#e2e8f0;color:#475569;border:none;border-radius:10px;padding:0.7rem 1.4rem;font-weight:700;cursor:pointer;font-size:0.95rem;">Cancelar</button>
+          <button id="caja-print-btn" style="background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;border:none;border-radius:10px;padding:0.7rem 1.6rem;font-weight:900;cursor:pointer;font-size:1rem;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(220,38,38,0.35);">
+            <i data-lucide="printer" style="width:18px;height:18px;"></i> Imprimir Lista de Caja
+          </button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+
+    document.getElementById('close-caja-btn').onclick = closeCajaModal;
+    document.getElementById('caja-cancel-btn').onclick = closeCajaModal;
+    document.getElementById('caja-print-btn').onclick = printCajaList;
+
+    // Populate product rows
+    const list = document.getElementById('caja-product-list');
+    cajaItems = [];
+
+    CAJA_PRODUCTS.forEach((name, i) => {
+        cajaItems.push({ name: name.toUpperCase(), price: '' });
+        const row = document.createElement('div');
+        row.style.cssText = `
+            display:flex;align-items:center;gap:1rem;
+            padding:0.55rem 0.8rem;
+            background:${i % 2 === 0 ? '#f8fafc' : 'white'};
+            border-bottom:1px solid #e2e8f0;
+            border-radius:6px;
+        `;
+        row.innerHTML = `
+          <span style="flex:1;font-weight:700;font-size:0.92rem;color:#1e293b;letter-spacing:0.01em;">${name.toUpperCase()}</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:0.8rem;font-weight:800;color:#64748b;">Bs</span>
+            <input type="number" min="0" step="1" placeholder="0"
+              data-caja-index="${i}"
+              style="width:110px;padding:0.5rem 0.6rem;border:2px solid #e2e8f0;border-radius:9px;font-size:1.05rem;font-weight:800;text-align:center;color:#1e293b;background:white;outline:none;transition:border .2s;"
+              onfocus="this.style.borderColor='#dc2626'"
+              onblur="this.style.borderColor='#e2e8f0'"
+              oninput="cajaItems[${i}].price = this.value">
+          </div>`;
+        list.appendChild(row);
+    });
+
+    modal.style.display = 'flex';
+    if (window.lucide) lucide.createIcons();
+}
+
+
+function closeCajaModal() {
+    const modal = document.getElementById('caja-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+function formatCajaPrice(val) {
+    const n = parseFloat(String(val).replace(/,/g, '.'));
+    if (isNaN(n)) return '';
+    return n.toLocaleString('es-VE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function printCajaList() {
+    // Solo productos con precio mayor a 0
+    const items = cajaItems.filter(c => {
+        const p = parseFloat(String(c.price).trim());
+        return !isNaN(p) && p > 0;
+    });
+
+    if (items.length === 0) {
+        alert('Ingresa al menos un precio para imprimir.');
+        return;
+    }
+    closeCajaModal();
+
+    const printWin = window.open('', '_blank');
+    if (!printWin) { alert('Por favor, permite los pop-ups para imprimir.'); return; }
+
+    const today = new Date().toLocaleDateString('es-ES');
+
+    let rows = '';
+    const half = Math.ceil(items.length / 2);
+
+    for (let i = 0; i < half; i++) {
+        const leftItem = items[i];
+        const rightItem = items[i + half];
+
+        const buildCol = (it) => {
+            if (!it) return '<td class="c-name"></td><td class="c-price"></td>';
+            const priceRaw = parseFloat(String(it.price).trim());
+            const price = (!isNaN(priceRaw) && priceRaw > 0) ? formatCajaPrice(it.price) : '0';
+            return `<td class="c-name">${it.name}</td><td class="c-price">${price}</td>`;
+        };
+
+        rows += `<tr>
+          ${buildCol(leftItem)}
+          ${buildCol(rightItem)}
+        </tr>`;
+    }
+
+    const html = `<!DOCTYPE html><html><head><title>Caja - Feria del Este</title>
+    <style>
+      @page { size: landscape; margin: 4mm; }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body {
+        margin: 0; padding: 4mm;
+        background: white; 
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      table { width: max-content; margin: 0 auto; border-collapse: collapse; }
+      td { 
+        border: 1px solid #000; 
+        padding: 3mm 4mm; 
+        vertical-align: middle;
+        font-size: 13pt;
+        font-weight: 900;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+      .c-name { width: auto; }
+      .c-price { width: auto; text-align: right; }
+    </style></head><body>
+      <table>
+        ${rows}
+      </table>
+    <script>
+      window.onload = function() {
+        setTimeout(function(){ window.print(); window.close(); }, 400);
+      };
+    <\/script>
+    </body></html>`;
+
+    printWin.document.write(html);
+    printWin.document.close();
+}
+
+
+window.openCajaModal = openCajaModal;
+window.closeCajaModal = closeCajaModal;
+window.printCajaList = printCajaList;
+
