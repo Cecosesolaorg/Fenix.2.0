@@ -208,9 +208,7 @@ function buildTicketHtml(card, today, feriaHandle) {
     h += '<span style="font-family:Montserrat,sans-serif;font-size:6rem;font-weight:900;color:black;line-height:0.9;"> ' + card.price + '</span>';
     h += '</div>';
     h += dollarCorner;
-    h += '<div style="font-family:Montserrat,sans-serif;font-size:0.85rem;font-weight:700;color:black;font-style:italic;text-align:center;margin-top:2mm;">¡Gracias por tu visita! Que tengas un excelente día.</div>'; h += '<div style="font-family:Montserrat,sans-serif;font-size:0.85rem;font-weight:700;color:black;font-style:italic;text-align:center;margin-top:2mm;">¡Gracias por tu visita! Que tengas un excelente día.</div>';
-
-
+    h += '<div style="font-family:Montserrat,sans-serif;font-size:0.85rem;font-weight:700;color:black;font-style:italic;text-align:center;margin-top:2mm;">¡Gracias por tu visita! Que tengas un excelente día.</div>'; h += '<div style="font-family:Montserrat,sans-serif;font-size:0.85rem;font-weight:700;color:black;font-style:italic;text-align:center;margin-top:2mm;"> </div>';
     h += '</div>';
     h += '</div>';
     return h;
